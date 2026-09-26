@@ -1244,7 +1244,7 @@ section {
   margin-top: 18px;
 }
 
-.case-study-notes {
+.case-study-notes { display: none;
   display: grid;
   gap: 12px;
   padding-top: 20px;
@@ -1914,17 +1914,17 @@ html.is-theme-changing *::after {
   gap: 18px;
 }
 
-[data-animate],
-.project-feature,
-.project-tile,
-.services-list article,
-.process-rail article,
-.person-row,
-.people-block,
-.about-copy,
-.contact-copy,
-.contact-form,
-.editorial-grid > * {
+[data-animate].will-animate,
+.project-feature.will-animate,
+.project-tile.will-animate,
+.services-list article.will-animate,
+.process-rail article.will-animate,
+.person-row.will-animate,
+.people-block.will-animate,
+.about-copy.will-animate,
+.contact-copy.will-animate,
+.contact-form.will-animate,
+.editorial-grid > .will-animate {
   opacity: 0;
   transform: translateY(24px);
 }
@@ -2179,4 +2179,194 @@ html.is-theme-changing *::after {
   [data-project-media] {
     cursor: none;
   }
+}
+
+
+/* SPA PAGE VIEWS */
+.page-view {
+  display: none;
+  
+}
+.page-view.is-active {
+  display: block;
+}
+
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ARCHIVE PAGE */
+.archive-section {
+  padding: 140px 0 80px;
+}
+.archive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  margin-top: 60px;
+}
+@media (min-width: 900px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 80px 40px;
+  }
+  .archive-grid .project-tile.is-featured {
+    grid-column: span 2;
+  }
+}
+
+/* CASE STUDY PAGE */
+.case-study-content {
+  padding-top: 140px;
+  padding-bottom: 80px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+  margin-bottom: 40px;
+  transition: color 200ms ease;
+}
+.back-link:hover {
+  color: var(--ink);
+}
+.cs-title {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+.cs-positioning {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  color: var(--muted);
+  margin-top: 24px;
+  max-width: 800px;
+}
+.cs-hero {
+  margin: 60px 0;
+  background: var(--surface-elevated);
+}
+.cs-hero img {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  display: block;
+}
+.cs-metadata {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 80px;
+}
+@media (min-width: 768px) {
+  .cs-metadata {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.cs-meta-item dt {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.cs-meta-item dd {
+  font-weight: 600;
+  color: var(--ink);
+}
+.cs-section {
+  margin-bottom: 80px;
+  max-width: 800px;
+}
+.cs-number {
+  font-size: 0.85rem;
+  color: var(--cyan);
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.cs-section h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: 2rem;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.cs-section p {
+  font-size: 1.15rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.cs-section ul {
+  padding-left: 20px;
+  margin-bottom: 24px;
+  color: var(--muted);
+}
+.cs-section li {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+.cs-product-grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 40px;
+}
+.cs-product-grid img {
+  width: 100%;
+  border-radius: 8px;
+  background: var(--surface-elevated);
+}
+.cs-credits {
+  display: grid;
+  gap: 32px;
+  margin-top: 32px;
+}
+.cs-credit-person h4 {
+  font-size: 1.25rem;
+  font-family: "Manrope", sans-serif;
+  margin-bottom: 4px;
+}
+.cs-credit-person p {
+  font-size: 1rem;
+  color: var(--cyan);
+  margin-bottom: 12px;
+}
+.cs-credit-links {
+  display: flex;
+  gap: 16px;
+}
+.cs-next {
+  margin-top: 120px;
+  padding: 80px 0;
+  text-align: center;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+}
+.cs-next p {
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+.cs-next h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2rem, 4vw, 4rem);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  transition: color 300ms ease;
+}
+.cs-next:hover h2 {
+  color: var(--cyan);
 }

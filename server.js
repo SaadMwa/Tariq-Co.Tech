@@ -22,9 +22,15 @@ const server = http.createServer((req, res) => {
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/html; charset=UTF-8' });
-      res.end('<h1>404 Not Found</h1>');
-      return;
+      // Fallback for SPA routing
+      const ext = path.extname(filePath).toLowerCase();
+      if (!ext || ext === '.html') {
+        filePath = path.join(__dirname, 'index.html');
+      } else {
+        res.writeHead(404, { 'Content-Type': 'text/html; charset=UTF-8' });
+        res.end('<h1>404 Not Found</h1>');
+        return;
+      }
     }
 
     const ext = path.extname(filePath).toLowerCase();

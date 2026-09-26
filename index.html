@@ -71,7 +71,7 @@
       </a>
 
       <div class="nav-links" id="navLinks">
-        <a href="#work">Work</a>
+        <a href="/work">Work</a>
         <a href="#services">Services</a>
         <a href="#process">Process</a>
         <a href="#about">About</a>
@@ -99,7 +99,7 @@
     </nav>
   </header>
 
-  <main id="main">
+  <main id="page-home" class="page-view is-active">
     <section class="hero" id="top">
       <canvas class="system-canvas" id="systemCanvas" aria-hidden="true"></canvas>
       <div class="hero-noise" aria-hidden="true"></div>
@@ -110,7 +110,7 @@
           <p class="hero-text reveal-item">We design and build custom platforms, web products, dashboards, automation, and operational tools for teams that have outgrown scattered manual work.</p>
           <div class="hero-actions reveal-item">
             <a href="#contact" class="button button-primary magnetic"><span class="button-label">Start a Project</span><span class="button-icon" aria-hidden="true">-&gt;</span></a>
-            <a href="#work" class="button button-secondary magnetic"><span class="button-label">View Our Work</span><span class="link-arrow" aria-hidden="true">-&gt;</span></a>
+            <a href="/work" class="button button-secondary magnetic"><span class="button-label">View Our Work</span><span class="link-arrow" aria-hidden="true">-&gt;</span></a>
           </div>
         </div>
 
@@ -318,8 +318,78 @@
         </form>
       </div>
     </section>
+  
   </main>
 
+  <main id="page-work" class="page-view" style="display:none;">
+    <section class="archive-section">
+      <div class="container">
+        <div class="archive-header section-heading">
+          <p class="kicker">Our Work</p>
+          <h1 class="section-title">Software systems and digital products.</h1>
+          <p style="margin-top:20px; color:var(--muted); font-size:1.1rem; max-width:600px;">Web experiences built around real operational needs.</p>
+        </div>
+        <div class="archive-grid" id="archiveProjects"></div>
+      </div>
+    </section>
+  </main>
+
+  <main id="page-case-study" class="page-view" style="display:none;">
+    <article class="case-study-content">
+      <div class="container">
+        <header class="cs-header">
+          <a href="/work" class="back-link"><span aria-hidden="true">&lt;-</span> Back to all work</a>
+          <h1 class="cs-title" id="csTitle">Project Name</h1>
+          <p class="cs-positioning" id="csPositioning">Strong one-sentence positioning.</p>
+        </header>
+      </div>
+      
+      <div class="cs-hero" id="csHero"></div>
+
+      <div class="container">
+        <div class="cs-metadata" id="csMetadata"></div>
+
+        <div class="cs-body">
+          <section class="cs-section" id="csProblemSec" style="display:none;">
+            <p class="cs-number">01</p>
+            <h2>The Problem</h2>
+            <div id="csProblem"></div>
+          </section>
+
+          <section class="cs-section" id="csSystemSec" style="display:none;">
+            <p class="cs-number">02</p>
+            <h2>The System</h2>
+            <div id="csSystem"></div>
+          </section>
+
+          <section class="cs-section" id="csProductSec" style="display:none;">
+            <p class="cs-number">03</p>
+            <h2>The Product</h2>
+            <div id="csProduct"></div>
+          </section>
+
+          <section class="cs-section" id="csEngineeringSec" style="display:none;">
+            <p class="cs-number">04</p>
+            <h2>Engineering</h2>
+            <div id="csEngineering"></div>
+          </section>
+
+          <section class="cs-section" id="csResultSec" style="display:none;">
+            <p class="cs-number">05</p>
+            <h2>Result</h2>
+            <div id="csResult"></div>
+          </section>
+
+          <section class="cs-section">
+            <h2>Project Credits</h2>
+            <div class="cs-credits" id="csCredits"></div>
+          </section>
+        </div>
+      </div>
+      
+      <section class="cs-next" id="csNext"></section>
+    </article>
+  
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -330,7 +400,7 @@
         </div>
       </div>
       <div class="footer-links">
-        <a href="#work">Work</a>
+        <a href="/work">Work</a>
         <a href="#services">Services</a>
         <a href="#contact">Contact</a>
       </div>

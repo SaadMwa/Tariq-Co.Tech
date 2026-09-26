@@ -33,17 +33,15 @@ const projects = [
     visualLabel: 'Live business site',
     image: 'images/yousafzay.PNG',
     liveUrl: 'https://yousafzaiagrifoods.com/',
-    caseStudyUrl: '#case-yousafzai-agri-foods',
+    slug: 'yousafzai-agri-foods',
     technologies: ['B2B Supply', 'Quote System', 'Digital Storefront'],
     collaborators: [
       { ...people.saad, creditRole: 'Product Direction & Engineering' }
     ],
-    caseStudy: [
-      { label: 'Problem', text: 'The business needed a credible public presence that could support supplier conversations and make the offer easy to understand.' },
-      { label: 'Approach', text: 'The site was structured around clarity: company context, product communication, and a short path to inquiry.' },
-      { label: 'Product', text: 'A focused responsive website that presents the business as a serious supplier rather than a generic brochure.' },
-      { label: 'Engineering', text: 'The implementation prioritizes fast loading, simple navigation, and maintainable static delivery.' }
-    ],
+    problem: 'The business needed a credible public presence that could support supplier conversations and make the offer easy to understand.',
+    system: 'The site was structured around clarity: company context, product communication, and a short path to inquiry.',
+    result: 'A focused responsive website that presents the business as a serious supplier rather than a generic brochure.',
+    engineering: 'The implementation prioritizes fast loading, simple navigation, and maintainable static delivery.',
     featured: true
   },
   {
@@ -56,17 +54,15 @@ const projects = [
     status: 'Live',
     image: 'images/crispiano_cafe.PNG',
     liveUrl: 'https://crispiano-cafe-eight.vercel.app/',
-    caseStudyUrl: '#case-crispiano-cafe',
+    slug: 'crispiano-cafe',
     technologies: ['Hospitality Web', 'Direct Ordering', 'Menu Management'],
     collaborators: [
       { ...people.saad, creditRole: 'Product Direction & Engineering' }
     ],
-    caseStudy: [
-      { label: 'Problem', text: 'The cafe needed a web presence that communicated atmosphere and made common customer actions easy.' },
-      { label: 'Approach', text: 'The interface uses a warm visual direction, clear navigation, and menu-focused content hierarchy.' },
-      { label: 'Product', text: 'A responsive hospitality website with a strong first impression and visible ordering path.' },
-      { label: 'Engineering', text: 'The build keeps the presentation lightweight while preserving large visual impact.' }
-    ],
+    problem: 'The cafe needed a web presence that communicated atmosphere and made common customer actions easy.',
+    system: 'The interface uses a warm visual direction, clear navigation, and menu-focused content hierarchy.',
+    result: 'A responsive hospitality website with a strong first impression and visible ordering path.',
+    engineering: 'The build keeps the presentation lightweight while preserving large visual impact.',
     featured: true
   },
   {
@@ -79,17 +75,15 @@ const projects = [
     status: 'Live',
     image: 'images/tecstem_project.PNG',
     liveUrl: 'https://techstem-technologies.vercel.app/',
-    caseStudyUrl: '#case-techstem-technologies',
+    slug: 'techstem-technologies',
     technologies: ['Service Pathways', 'Technical Marketing', 'Content Architecture'],
     collaborators: [
       { ...people.mahak, creditRole: 'Web Development' }
     ],
-    caseStudy: [
-      { label: 'Problem', text: 'The project needed a clean technology-company presentation with clear service messaging.' },
-      { label: 'Approach', text: 'The layout uses structured content blocks, confident spacing, and direct navigation.' },
-      { label: 'Product', text: 'A responsive marketing website built to communicate technical services quickly.' },
-      { label: 'Engineering', text: 'Front-end execution focuses on maintainable layout, responsive behavior, and polished presentation.' }
-    ],
+    problem: 'The project needed a clean technology-company presentation with clear service messaging.',
+    system: 'The layout uses structured content blocks, confident spacing, and direct navigation.',
+    result: 'A responsive marketing website built to communicate technical services quickly.',
+    engineering: 'Front-end execution focuses on maintainable layout, responsive behavior, and polished presentation.',
     featured: true
   },
   {
@@ -98,7 +92,7 @@ const projects = [
     description: 'A conversion-focused enrollment system created to streamline student registration, course detailing, and syllabus presentation into one flow.',
     image: 'images/online_course.PNG',
     liveUrl: 'https://online-course-landing-page-eight.vercel.app/',
-    caseStudyUrl: null,
+    slug: null,
     year: '2026',
     services: ['Landing page', 'Education UI', 'Responsive sections'],
     status: 'Live',
@@ -114,7 +108,7 @@ const projects = [
     description: 'A unified retail interface engineered to replace fragmented purchasing steps with a smooth product discovery and checkout experience.',
     image: 'images/e-commerce.PNG',
     liveUrl: 'https://e-commerce-app-eta-dun.vercel.app/',
-    caseStudyUrl: null,
+    slug: null,
     year: '2026',
     services: ['E-commerce UI', 'Product browsing', 'Responsive app'],
     status: 'Live',
@@ -130,7 +124,7 @@ const projects = [
     description: 'A patient management front-end designed to consolidate appointment booking, clinic services, and contact information into a trusted medical resource.',
     image: 'images/dental_clinic.PNG',
     liveUrl: 'https://dental-clinic-seven-iota.vercel.app/',
-    caseStudyUrl: null,
+    slug: null,
     year: '2026',
     services: ['Healthcare UI', 'Service pages', 'Responsive web'],
     status: 'Live',
@@ -146,7 +140,7 @@ const projects = [
     description: 'An immersive digital reservation platform built to reflect premium hospitality while guiding guests straight to table booking.',
     image: 'images/Veylora.PNG',
     liveUrl: 'https://veylora-the-fine-dining.vercel.app/',
-    caseStudyUrl: null,
+    slug: null,
     year: '2026',
     services: ['Restaurant UI', 'Editorial layout', 'Responsive web'],
     status: 'Concept',
@@ -233,353 +227,228 @@ function renderFeaturedProjects() {
   const mount = document.getElementById('featuredProjects');
   if (!mount) return;
 
-  mount.innerHTML = projects.filter((project) => project.featured).map((project, index) => `
-    <article class="project-feature project-moment-${index + 1}" id="project-${slugify(project.name)}" data-project-card>
-      <div class="project-brief">
-        <div class="project-line">
-          <span>${String(index + 1).padStart(2, '0')}</span>
-          <span>${project.year}</span>
+  const featured = projects.filter(p => p.featured).slice(0, 3);
+  
+  let html = '';
+  featured.forEach((project, index) => {
+    const isLarge = index === 0;
+    const linkUrl = project.slug ? '/work/' + project.slug : (project.liveUrl || '#');
+    const wrapper = isLarge ? 'article' : 'div';
+    const classes = isLarge ? 'project-feature is-large' : 'project-tile';
+    
+    html += `
+      <${wrapper} class="${classes}" data-project-card>
+        ${!isLarge ? `<div class="tile-image" data-project-media data-cursor-label="${project.slug ? 'VIEW CASE' : 'EXPLORE'}" data-link="${linkUrl}">${renderMedia(project)}</div>` : ''}
+        
+        <div class="${isLarge ? 'project-brief' : 'tile-body'}">
+          <div class="project-line">
+            <span>${isLarge ? '0' + (index + 1) : project.year}</span>
+            <span>${isLarge ? project.year : project.category}</span>
+          </div>
+          <h3>${project.name}</h3>
+          <p class="${isLarge ? 'project-description' : ''}">${project.description}</p>
+          ${isLarge ? `<p class="project-services">${project.services.join(' / ')}</p>` : ''}
+          ${renderProjectCredits(project)}
+          
+          ${!isLarge ? `
+          <div class="project-actions" style="margin-top:16px;">
+            <a href="${linkUrl}" class="text-link case-link" ${!project.slug ? 'target="_blank" rel="noopener"' : ''}>
+              ${project.slug ? 'View Case Study' : 'Explore'} <span class="link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+          ` : ''}
         </div>
-        <h3>${project.name}</h3>
-        <p class="project-description">${project.description}</p>
-        <p class="project-services">${project.services.join(' / ')}</p>
-      </div>
-      <div class="project-media" data-project-media data-cursor-label="${project.caseStudyUrl ? 'VIEW CASE' : 'EXPLORE'}" data-link="${project.caseStudyUrl || project.liveUrl || ''}">${renderMedia(project)}</div>
-      <div class="project-detail">
-        <dl class="project-meta">
-          <div><dt>Type</dt><dd>${project.category}</dd></div>
-          <div><dt>Status</dt><dd>${project.status}</dd></div>
-          <div><dt>Services</dt><dd>${project.services.join(', ')}</dd></div>
-          <div><dt>Year</dt><dd>${project.year}</dd></div>
-        </dl>
-        <div class="case-study-notes" id="case-${slugify(project.name)}">
-          ${project.caseStudy.map((item, noteIndex) => `
-            <div>
-              <span>${String(noteIndex + 1).padStart(2, '0')} - ${item.label}</span>
-              <p>${item.text}</p>
-            </div>
-          `).join('')}
+        
+        ${isLarge ? `
+        <div class="project-media" data-project-media data-cursor-label="${project.slug ? 'VIEW CASE' : 'EXPLORE'}" data-link="${linkUrl}">
+          ${renderMedia(project)}
         </div>
-      </div>
-      <div class="project-footer">
-        ${renderProjectCredits(project)}
-        <div class="project-actions">
-          ${project.caseStudyUrl ? `<a class="text-link case-link" href="${project.caseStudyUrl}">View Case Study <span class="link-arrow" aria-hidden="true">-&gt;</span></a>` : ''}
-          ${project.liveUrl ? externalLink('Live Project', project.liveUrl, 'button button-secondary') : '<span class="no-link-note">Live link withheld until verified.</span>'}
-        </div>
-      </div>
-    </article>
-  `).join('');
+        ` : ''}
+      </${wrapper}>
+    `;
+  });
+
+  mount.innerHTML = html;
+  bindMediaClicks();
 }
 
-function renderSupportingProjects() {
-  const mount = document.getElementById('supportingProjects');
+function renderArchiveProjects() {
+  const mount = document.getElementById('archiveProjects');
   if (!mount) return;
 
-  mount.innerHTML = projects.filter((project) => !project.featured).map((project) => `
-    <article class="project-tile" data-project-card>
-      <div class="tile-image" data-project-media data-cursor-label="EXPLORE" data-link="${project.caseStudyUrl || project.liveUrl || ''}">${renderMedia(project)}</div>
+  mount.innerHTML = projects.map((project) => {
+    const linkUrl = project.slug ? '/work/' + project.slug : (project.liveUrl || '#');
+    return `
+    <article class="project-tile ${project.featured ? 'is-featured' : ''}" data-project-card>
+      <div class="tile-image" data-project-media data-cursor-label="${project.slug ? 'VIEW CASE' : 'EXPLORE'}" data-link="${linkUrl}">${renderMedia(project)}</div>
       <div class="tile-body">
         <div class="project-line">
           <span>${project.year}</span>
-          <span>${project.status}</span>
+          <span>${project.category}</span>
         </div>
         <h3>${project.name}</h3>
         <p>${project.description}</p>
-        <div class="tech-list">
-          ${project.technologies.slice(0, 2).map((item) => `<span class="tech-pill">${item}</span>`).join('')}
-        </div>
-        <div class="project-actions">
-          ${project.liveUrl ? externalLink('Live Project', project.liveUrl) : '<span class="no-link-note">No verified live link.</span>'}
-        </div>
         ${renderProjectCredits(project)}
+        <div class="project-actions" style="margin-top:16px;">
+          <a href="${linkUrl}" class="text-link case-link" ${!project.slug ? 'target="_blank" rel="noopener"' : ''}>
+            ${project.slug ? 'View Case Study' : 'Explore'} <span class="link-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
       </div>
     </article>
-  `).join('');
+  `}).join('');
+  bindMediaClicks();
 }
 
-function renderPeopleRows() {
-  const mount = document.getElementById('peopleRows');
-  if (!mount) return;
+function renderCaseStudy(slug) {
+  const project = projects.find(p => p.slug === slug);
+  if (!project) return false;
 
-  mount.innerHTML = Object.values(people).map((person) => `
-    <article class="person-row">
-      <div class="avatar" aria-hidden="true">${person.avatar}</div>
-      <div class="person-copy">
-        <h3>${person.name}</h3>
-        <p>${person.role}</p>
-      </div>
-      <div class="person-links">${renderPersonLinks(person)}</div>
-    </article>
-  `).join('');
-}
-
-function initNavigation() {
-  const header = document.getElementById('siteHeader');
-  const menuToggle = document.getElementById('menuToggle');
-  const navLinks = document.getElementById('navLinks');
-
-  function setHeaderState() {
-    if (header) header.classList.toggle('is-scrolled', window.scrollY > 20);
+  document.getElementById('csTitle').textContent = project.name;
+  document.getElementById('csPositioning').textContent = project.description;
+  
+  const hero = document.getElementById('csHero');
+  if (project.image) {
+    hero.innerHTML = `<img src="${project.image}" alt="${project.name} preview">`;
+  } else {
+    hero.innerHTML = `<div style="padding:120px; text-align:center; background:var(--surface);"><h2 style="font-family:'Manrope',sans-serif;">${project.name}</h2><p>No preview available</p></div>`;
   }
 
-  setHeaderState();
-  window.addEventListener('scroll', setHeaderState, { passive: true });
+  document.getElementById('csMetadata').innerHTML = `
+    <div class="cs-meta-item"><dt>Year</dt><dd>${project.year}</dd></div>
+    <div class="cs-meta-item"><dt>Type</dt><dd>${project.category}</dd></div>
+    <div class="cs-meta-item"><dt>Services</dt><dd>${project.services.join('<br>')}</dd></div>
+    ${project.liveUrl ? `<div class="cs-meta-item"><dt>Live Product</dt><dd><a href="${project.liveUrl}" target="_blank" class="text-link">${project.liveUrl.replace('https://', '')} ↗</a></dd></div>` : ''}
+  `;
 
-  if (!menuToggle || !navLinks) return;
-
-  menuToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('is-open');
-    menuToggle.setAttribute('aria-expanded', String(isOpen));
-    menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
-  });
-
-  navLinks.addEventListener('click', (event) => {
-    if (event.target.tagName === 'A') {
-      navLinks.classList.remove('is-open');
-      menuToggle.setAttribute('aria-expanded', 'false');
-      menuToggle.setAttribute('aria-label', 'Open navigation');
+  const fillSection = (id, text) => {
+    const el = document.getElementById(id);
+    if (text) {
+      el.innerHTML = `<p>${text}</p>`;
+      el.parentElement.style.display = 'block';
+    } else {
+      el.parentElement.style.display = 'none';
     }
-  });
-}
-
-function initTheme() {
-  const root = document.documentElement;
-  const switcher = document.getElementById('themeSwitch');
-  if (!switcher) return;
-
-  const options = Array.from(switcher.querySelectorAll('[data-theme-choice]'));
-  const systemQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  const storageKey = 'tc-theme';
-
-  function storedMode() {
-    const saved = localStorage.getItem(storageKey);
-    return ['system', 'light', 'dark'].includes(saved) ? saved : 'system';
-  }
-
-  function resolveTheme(mode) {
-    return mode === 'system' ? (systemQuery.matches ? 'dark' : 'light') : mode;
-  }
-
-  function applyTheme(mode, shouldPersist = true) {
-    const theme = resolveTheme(mode);
-    const isDark = theme === 'dark';
-    root.dataset.theme = theme;
-    root.dataset.themeMode = mode;
-    root.style.colorScheme = theme;
-
-    options.forEach((option) => {
-      const isActive = option.dataset.themeChoice === mode;
-      option.setAttribute('aria-pressed', String(isActive));
-    });
-
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) metaTheme.setAttribute('content', isDark ? '#070b14' : '#f5f7fb');
-
-    if (shouldPersist) localStorage.setItem(storageKey, mode);
-  }
-
-  applyTheme(root.dataset.themeMode || storedMode(), false);
-
-  options.forEach((option) => {
-    option.addEventListener('click', () => {
-      const mode = option.dataset.themeChoice;
-      if (!mode) return;
-      root.classList.add('is-theme-changing');
-      applyTheme(mode);
-      window.setTimeout(() => root.classList.remove('is-theme-changing'), 320);
-    });
-  });
-
-  const syncSystemTheme = () => {
-    if (root.dataset.themeMode !== 'system') return;
-    root.classList.add('is-theme-changing');
-    applyTheme('system', false);
-    window.setTimeout(() => root.classList.remove('is-theme-changing'), 320);
   };
 
-  if (systemQuery.addEventListener) {
-    systemQuery.addEventListener('change', syncSystemTheme);
-  } else if (systemQuery.addListener) {
-    systemQuery.addListener(syncSystemTheme);
-  }
-}
+  fillSection('csProblem', project.problem);
+  fillSection('csSystem', project.system);
+  fillSection('csProduct', ''); // Visuals go here in future
+  fillSection('csEngineering', project.engineering);
+  fillSection('csResult', project.result);
 
-function initSystemCanvas() {
-  const canvas = document.getElementById('systemCanvas');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!canvas || reduced || window.innerWidth < 720) return;
+  const credits = project.collaborators.map((person) => {
+    const mainLink = person.links && person.links.length > 0 ? person.links[0].url : '#';
+    return `
+    <div class="cs-credit-person">
+      <h4>${person.name}</h4>
+      <p>${person.creditRole || person.role}</p>
+      <div class="cs-credit-links">
+        ${person.links.map(l => `<a href="${l.url}" target="_blank" class="text-link">${l.label} ↗</a>`).join('')}
+      </div>
+    </div>
+  `}).join('');
+  document.getElementById('csCredits').innerHTML = credits;
 
-  const ctx = canvas.getContext('2d');
-  const nodes = [];
-  const pointer = { x: 0.5, y: 0.5 };
-  let width = 0;
-  let height = 0;
-  let rafId;
-
-  function resize() {
-    const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
-    width = canvas.offsetWidth;
-    height = canvas.offsetHeight;
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    nodes.length = 0;
-    const count = Math.min(58, Math.floor(width / 26));
-    for (let i = 0; i < count; i += 1) {
-      nodes.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22,
-        r: 1.2 + Math.random() * 2
-      });
+  // Next Project
+  const currentIndex = projects.findIndex(p => p.slug === slug);
+  let nextProject = null;
+  for(let i = currentIndex + 1; i < projects.length; i++) {
+    if(projects[i].slug) {
+      nextProject = projects[i];
+      break;
     }
   }
+  if(!nextProject) nextProject = projects.find(p => p.slug); // wrap around
 
-  function draw() {
-    ctx.clearRect(0, 0, width, height);
-    const pullX = (pointer.x - 0.5) * 18;
-    const pullY = (pointer.y - 0.5) * 18;
-
-    nodes.forEach((node, index) => {
-      node.x += node.vx;
-      node.y += node.vy;
-      if (node.x < -20) node.x = width + 20;
-      if (node.x > width + 20) node.x = -20;
-      if (node.y < -20) node.y = height + 20;
-      if (node.y > height + 20) node.y = -20;
-
-      for (let j = index + 1; j < nodes.length; j += 1) {
-        const other = nodes[j];
-        const dx = node.x - other.x;
-        const dy = node.y - other.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 150) {
-          const opacity = (1 - distance / 150) * 0.16;
-          ctx.beginPath();
-          ctx.moveTo(node.x + pullX, node.y + pullY);
-          ctx.lineTo(other.x + pullX, other.y + pullY);
-          ctx.strokeStyle = `rgba(77, 141, 255, ${opacity})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-      }
-
-      ctx.beginPath();
-      ctx.arc(node.x + pullX, node.y + pullY, node.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(57, 183, 255, 0.42)';
-      ctx.fill();
-    });
-
-    rafId = requestAnimationFrame(draw);
+  if (nextProject) {
+    document.getElementById('csNext').innerHTML = `
+      <p>Next Project</p>
+      <a href="/work/${nextProject.slug}" style="text-decoration:none;"><h2>${nextProject.name} <span aria-hidden="true">-&gt;</span></h2></a>
+    `;
   }
 
-  window.addEventListener('resize', resize, { passive: true });
-  window.addEventListener('pointermove', (event) => {
-    pointer.x = event.clientX / window.innerWidth;
-    pointer.y = event.clientY / window.innerHeight;
-  }, { passive: true });
-
-  resize();
-  draw();
-
-  window.addEventListener('pagehide', () => cancelAnimationFrame(rafId));
+  document.title = project.name + " - Tariq & Co.Tech";
+  return true;
 }
 
-function initHeroSystem() {
-  const heroSystem = document.querySelector('.hero-system');
-  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!heroSystem || !canHover || reduced) return;
-
-  const chips = heroSystem.querySelectorAll('.system-chip');
-  const panel = heroSystem.querySelector('.system-panel');
-
-  heroSystem.addEventListener('pointermove', (event) => {
-    const rect = heroSystem.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-    if (window.gsap) {
-      gsap.to(panel, { x: x * 10, y: y * 8, duration: 0.45, ease: 'power3.out' });
-      chips.forEach((chip, index) => {
-        const depth = 8 + index * 4;
-        gsap.to(chip, { x: x * depth, y: y * depth, duration: 0.5, ease: 'power3.out' });
-      });
-    }
-  });
-
-  heroSystem.addEventListener('pointerleave', () => {
-    if (window.gsap) {
-      gsap.to([panel, ...chips], { x: 0, y: 0, duration: 0.55, ease: 'power3.out' });
-    }
-  });
-}
-
-function initCursor() {
+function handleRoute() {
+  const path = window.location.pathname;
+  
+  document.querySelectorAll('.page-view').forEach(view => view.classList.remove('is-active'));
+  
+  // Custom cursor cleanup
   const cursor = document.getElementById('cursorDot');
-  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!cursor || !canHover || reduced) return;
+  if (cursor) cursor.classList.remove('is-active', 'is-project');
 
-  let x = window.innerWidth / 2;
-  let y = window.innerHeight / 2;
-  let tx = x;
-  let ty = y;
-  let scale = 0;
-  let targetScale = 0;
-  let activeMedia = null;
+  window.scrollTo({ top: 0, behavior: 'instant' });
 
-  function render() {
-    x += (tx - x) * 0.18;
-    y += (ty - y) * 0.18;
-    scale += (targetScale - scale) * 0.2;
-    cursor.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${scale})`;
-    requestAnimationFrame(render);
-  }
-
-    document.addEventListener('pointermove', (event) => {
-    if (!activeMedia) return;
-    tx = event.clientX;
-    ty = event.clientY;
-  }, { passive: true });
-
-  window.addEventListener('scroll', () => {
-    if (!activeMedia) return;
-    const rect = activeMedia.getBoundingClientRect();
-    if (tx < rect.left || tx > rect.right || ty < rect.top || ty > rect.bottom) {
-      activeMedia = null;
-      targetScale = 0;
-      cursor.classList.remove('is-active', 'is-project');
+  if (path === '/' || path.endsWith('/index.html') || (!path.includes('/work') && !path.includes('/work/'))) {
+    document.title = "Tariq & Co.Tech - Software Studio";
+    document.getElementById('page-home').classList.add('is-active');
+  } else if (path === '/work' || path === '/work/') {
+    document.title = "Selected Work - Tariq & Co.Tech";
+    renderArchiveProjects();
+    document.getElementById('page-work').classList.add('is-active');
+    // We must re-bind cursor events for newly injected DOM
+    if (typeof initCursor === 'function') {
+        // Just let global event listeners handle it, or re-run querySelectorAll logic
+        bindMediaClicks();
     }
-  }, { passive: true });
+  } else if (path.startsWith('/work/')) {
+    const slug = path.split('/work/')[1].replace('/', '');
+    if (renderCaseStudy(slug)) {
+      document.getElementById('page-case-study').classList.add('is-active');
+    } else {
+      document.getElementById('page-work').classList.add('is-active');
+    }
+  } else {
+    // Fallback for file:// protocols or unknown routes
+    document.title = "Tariq & Co.Tech - Software Studio";
+    document.getElementById('page-home').classList.add('is-active');
+  }
+}
 
+function bindMediaClicks() {
   document.querySelectorAll('[data-project-media]').forEach((media) => {
-    media.addEventListener('pointerenter', (event) => {
-      activeMedia = media;
-      tx = event.clientX;
-      ty = event.clientY;
-      x = tx;
-      y = ty;
-      cursor.dataset.label = media.dataset.cursorLabel || 'EXPLORE';
-      targetScale = 1;
-      cursor.classList.add('is-active', 'is-project');
-    });
+    if (media.dataset.clickBound) return;
+    media.dataset.clickBound = 'true';
 
-    media.addEventListener('pointerleave', () => {
-      activeMedia = null;
-      targetScale = 0;
-      cursor.classList.remove('is-active', 'is-project');
+    media.addEventListener('click', () => {
+      const link = media.dataset.link;
+      if (!link) return;
+      if (link.startsWith('/')) {
+        history.pushState(null, '', link);
+        handleRoute();
+      } else if (link.startsWith('#')) {
+        const target = document.querySelector(link);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.open(link, '_blank', 'noopener,noreferrer');
+      }
     });
   });
+}
 
-  document.addEventListener('pointerleave', () => {
-    activeMedia = null;
-    targetScale = 0;
-    cursor.classList.remove('is-active', 'is-project');
+function initRouter() {
+  window.addEventListener('popstate', handleRoute);
+
+  document.body.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link || !link.href) return;
+    if (!link.href.startsWith(window.location.origin)) return;
+    if (link.target === '_blank') return;
+
+    const url = new URL(link.href);
+    if (url.pathname === window.location.pathname && url.hash) return;
+
+    e.preventDefault();
+    history.pushState(null, '', url.pathname + url.search + url.hash);
+    handleRoute();
   });
 
-  render();
+  handleRoute();
+  bindMediaClicks();
 }
 
 function initProjectMediaInteractions() {
@@ -588,6 +457,8 @@ function initProjectMediaInteractions() {
   if (!canHover || reduced) return;
 
   document.querySelectorAll('[data-project-media]').forEach((media) => {
+    if (media.dataset.cursorBound) return;
+    media.dataset.cursorBound = 'true';
     const canvas = media.querySelector('.media-canvas');
     const main = media.querySelector('.main-screen, .abstract-window');
     const secondary = media.querySelector('.detail-screen');
@@ -676,7 +547,10 @@ function fallbackReveal() {
     });
   }, { threshold: 0.08 });
 
-  targets.forEach((target) => observer.observe(target));
+  targets.forEach((target) => {
+    target.classList.add('will-animate');
+    observer.observe(target);
+  });
 }
 
 function initMotion() {
@@ -699,6 +573,11 @@ function initMotion() {
     ease: 'power3.out'
   });
 
+  gsap.utils.toArray('.reveal-item').forEach(item => {
+    // Force visibility just in case
+    item.style.opacity = '1';
+  });
+  
   gsap.from('.reveal-item', {
     y: 24,
     opacity: 0,
@@ -737,6 +616,7 @@ function initMotion() {
   });
 
   gsap.utils.toArray('.editorial-grid > *, .services-list article, .process-rail article, .person-row, .people-block, .about-copy, .contact-copy, .contact-form').forEach((item) => {
+    item.classList.add('will-animate');
     gsap.to(item, {
       opacity: 1,
       y: 0,
@@ -750,6 +630,7 @@ function initMotion() {
   });
 
   gsap.utils.toArray('.project-feature, .project-tile').forEach((card) => {
+    card.classList.add('will-animate');
     gsap.to(card, {
       opacity: 1,
       y: 0,
@@ -867,7 +748,7 @@ function initContactForm() {
 
 document.addEventListener('DOMContentLoaded', () => {
   renderFeaturedProjects();
-  renderSupportingProjects();
+  initRouter();
   initNavigation();
   initTheme();
   initSystemCanvas();
