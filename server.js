@@ -10,6 +10,7 @@ const MIME_TYPES = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
   '.pdf': 'application/pdf',
   '.json': 'application/json',
   '.svg': 'image/svg+xml'
@@ -42,5 +43,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Portfolio server is live at: http://localhost:${PORT}/`);
+  console.log(`Tariq & Co.Tech site is live at: http://localhost:${PORT}/`);
 });
