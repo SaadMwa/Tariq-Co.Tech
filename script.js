@@ -25,18 +25,18 @@ const projects = [
   {
     name: 'Yousafzai Agri Foods',
     category: 'B2B supply website',
-    description: 'A business-facing website for an agri-food supplier, shaped around credibility, product clarity, and direct inquiry from international buyers.',
+    description: 'A unified operations platform designed to replace manual buyer inquiries with a structured, credible product catalog and direct quote system.',
     year: '2026',
     role: 'Project lead',
     services: ['Web strategy', 'Responsive website', 'Business positioning'],
     status: 'Live',
     visualLabel: 'Live business site',
-    image: null,
+    image: 'images/yousafzay.PNG',
     liveUrl: 'https://yousafzaiagrifoods.com/',
     caseStudyUrl: '#case-yousafzai-agri-foods',
-    technologies: ['Business website', 'Responsive UI', 'Inquiry path'],
+    technologies: ['B2B Supply', 'Quote System', 'Digital Storefront'],
     collaborators: [
-      { ...people.saad, creditRole: 'Product / Engineering' }
+      { ...people.saad, creditRole: 'Product Direction & Engineering' }
     ],
     caseStudy: [
       { label: 'Problem', text: 'The business needed a credible public presence that could support supplier conversations and make the offer easy to understand.' },
@@ -49,7 +49,7 @@ const projects = [
   {
     name: 'Crispiano Cafe',
     category: 'Hospitality web experience',
-    description: 'A polished cafe website with strong atmosphere, menu-led browsing, responsive sections, and a direct ordering path.',
+    description: 'A dedicated web experience built to transition scattered social media traffic into a centralized ordering path with a premium atmosphere.',
     year: '2026',
     role: 'Project lead',
     services: ['Front-end build', 'Hospitality UI', 'Responsive experience'],
@@ -57,9 +57,9 @@ const projects = [
     image: 'images/crispiano_cafe.PNG',
     liveUrl: 'https://crispiano-cafe-eight.vercel.app/',
     caseStudyUrl: '#case-crispiano-cafe',
-    technologies: ['Restaurant website', 'Responsive layout', 'Customer journey'],
+    technologies: ['Hospitality Web', 'Direct Ordering', 'Menu Management'],
     collaborators: [
-      { ...people.saad, creditRole: 'Product / Engineering' }
+      { ...people.saad, creditRole: 'Product Direction & Engineering' }
     ],
     caseStudy: [
       { label: 'Problem', text: 'The cafe needed a web presence that communicated atmosphere and made common customer actions easy.' },
@@ -72,7 +72,7 @@ const projects = [
   {
     name: 'TechStem Technologies',
     category: 'Technology company website',
-    description: 'A service-led technology website with structured front-end execution, strong visual hierarchy, and clear company messaging.',
+    description: 'A marketing and service platform developed to organize complex technical offerings into direct, readable service pathways for prospective clients.',
     year: '2026',
     role: 'Web development collaborator',
     services: ['Front-end execution', 'Responsive website', 'Service presentation'],
@@ -80,7 +80,7 @@ const projects = [
     image: 'images/tecstem_project.PNG',
     liveUrl: 'https://techstem-technologies.vercel.app/',
     caseStudyUrl: '#case-techstem-technologies',
-    technologies: ['Web development', 'Service website', 'Responsive UI'],
+    technologies: ['Service Pathways', 'Technical Marketing', 'Content Architecture'],
     collaborators: [
       { ...people.mahak, creditRole: 'Web Development' }
     ],
@@ -95,14 +95,14 @@ const projects = [
   {
     name: 'Online Course Landing Page',
     category: 'Education landing page',
-    description: 'A conversion-oriented course experience with dark editorial styling, offer clarity, and strong landing-page structure.',
+    description: 'A conversion-focused enrollment system created to streamline student registration, course detailing, and syllabus presentation into one flow.',
     image: 'images/online_course.PNG',
     liveUrl: 'https://online-course-landing-page-eight.vercel.app/',
     caseStudyUrl: null,
     year: '2026',
     services: ['Landing page', 'Education UI', 'Responsive sections'],
     status: 'Live',
-    technologies: ['Landing page', 'Education UI', 'Responsive sections'],
+    technologies: ['Student Registration', 'Syllabus Presentation', 'Conversion Optimization'],
     collaborators: [
       { ...people.mahak, creditRole: 'Web Development' }
     ],
@@ -111,14 +111,14 @@ const projects = [
   {
     name: 'E-Commerce App',
     category: 'E-commerce experience',
-    description: 'A fashion-focused shopping interface with product-first visuals, navigation structure, and commerce-ready presentation.',
+    description: 'A unified retail interface engineered to replace fragmented purchasing steps with a smooth product discovery and checkout experience.',
     image: 'images/e-commerce.PNG',
     liveUrl: 'https://e-commerce-app-eta-dun.vercel.app/',
     caseStudyUrl: null,
     year: '2026',
     services: ['E-commerce UI', 'Product browsing', 'Responsive app'],
     status: 'Live',
-    technologies: ['E-commerce UI', 'Product browsing', 'Responsive app'],
+    technologies: ['Retail Interface', 'Product Discovery', 'Checkout Flow'],
     collaborators: [
       { ...people.mahak, creditRole: 'Web Development' }
     ],
@@ -127,14 +127,14 @@ const projects = [
   {
     name: 'Dental Clinic',
     category: 'Healthcare website',
-    description: 'A patient-facing healthcare website centered on services, trust, and straightforward clinic navigation.',
+    description: 'A patient management front-end designed to consolidate appointment booking, clinic services, and contact information into a trusted medical resource.',
     image: 'images/dental_clinic.PNG',
     liveUrl: 'https://dental-clinic-seven-iota.vercel.app/',
     caseStudyUrl: null,
     year: '2026',
     services: ['Healthcare UI', 'Service pages', 'Responsive web'],
     status: 'Live',
-    technologies: ['Healthcare UI', 'Service pages', 'Responsive web'],
+    technologies: ['Patient Front-end', 'Appointment Booking', 'Medical Resource'],
     collaborators: [
       { ...people.mahak, creditRole: 'Web Development' }
     ],
@@ -143,14 +143,14 @@ const projects = [
   {
     name: 'Veylora Fine Dining',
     category: 'Fine dining website',
-    description: 'A cinematic restaurant website with premium typography, hospitality atmosphere, and reservation-led presentation.',
+    description: 'An immersive digital reservation platform built to reflect premium hospitality while guiding guests straight to table booking.',
     image: 'images/Veylora.PNG',
-    liveUrl: null,
+    liveUrl: 'https://veylora-the-fine-dining.vercel.app/',
     caseStudyUrl: null,
     year: '2026',
     services: ['Restaurant UI', 'Editorial layout', 'Responsive web'],
     status: 'Concept',
-    technologies: ['Restaurant UI', 'Editorial layout', 'Responsive web'],
+    technologies: ['Digital Reservation', 'Premium Hospitality', 'Brand Interface'],
     collaborators: [
       { ...people.mahak, creditRole: 'Web Development' }
     ],
@@ -244,7 +244,7 @@ function renderFeaturedProjects() {
         <p class="project-description">${project.description}</p>
         <p class="project-services">${project.services.join(' / ')}</p>
       </div>
-      <div class="project-media" data-project-media data-cursor-label="${project.caseStudyUrl ? 'VIEW CASE' : 'EXPLORE'}">${renderMedia(project)}</div>
+      <div class="project-media" data-project-media data-cursor-label="${project.caseStudyUrl ? 'VIEW CASE' : 'EXPLORE'}" data-link="${project.caseStudyUrl || project.liveUrl || ''}">${renderMedia(project)}</div>
       <div class="project-detail">
         <dl class="project-meta">
           <div><dt>Type</dt><dd>${project.category}</dd></div>
@@ -278,7 +278,7 @@ function renderSupportingProjects() {
 
   mount.innerHTML = projects.filter((project) => !project.featured).map((project) => `
     <article class="project-tile" data-project-card>
-      <div class="tile-image" data-project-media data-cursor-label="EXPLORE">${renderMedia(project)}</div>
+      <div class="tile-image" data-project-media data-cursor-label="EXPLORE" data-link="${project.caseStudyUrl || project.liveUrl || ''}">${renderMedia(project)}</div>
       <div class="tile-body">
         <div class="project-line">
           <span>${project.year}</span>
@@ -538,10 +538,20 @@ function initCursor() {
     requestAnimationFrame(render);
   }
 
-  document.addEventListener('pointermove', (event) => {
+    document.addEventListener('pointermove', (event) => {
     if (!activeMedia) return;
     tx = event.clientX;
     ty = event.clientY;
+  }, { passive: true });
+
+  window.addEventListener('scroll', () => {
+    if (!activeMedia) return;
+    const rect = activeMedia.getBoundingClientRect();
+    if (tx < rect.left || tx > rect.right || ty < rect.top || ty > rect.bottom) {
+      activeMedia = null;
+      targetScale = 0;
+      cursor.classList.remove('is-active', 'is-project');
+    }
   }, { passive: true });
 
   document.querySelectorAll('[data-project-media]').forEach((media) => {
@@ -553,20 +563,20 @@ function initCursor() {
       y = ty;
       cursor.dataset.label = media.dataset.cursorLabel || 'EXPLORE';
       targetScale = 1;
-      cursor.classList.add('is-visible', 'is-project');
+      cursor.classList.add('is-active', 'is-project');
     });
 
     media.addEventListener('pointerleave', () => {
       activeMedia = null;
       targetScale = 0;
-      cursor.classList.remove('is-visible', 'is-project');
+      cursor.classList.remove('is-active', 'is-project');
     });
   });
 
   document.addEventListener('pointerleave', () => {
     activeMedia = null;
     targetScale = 0;
-    cursor.classList.remove('is-visible', 'is-project');
+    cursor.classList.remove('is-active', 'is-project');
   });
 
   render();
@@ -858,7 +868,6 @@ function initContactForm() {
 document.addEventListener('DOMContentLoaded', () => {
   renderFeaturedProjects();
   renderSupportingProjects();
-  renderPeopleRows();
   initNavigation();
   initTheme();
   initSystemCanvas();
