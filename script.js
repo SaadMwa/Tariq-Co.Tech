@@ -204,23 +204,80 @@ function renderPersonLinks(person, className = 'text-link') {
   return person.links.map((link) => externalLink(link.label, link.url, className)).join('');
 }
 
+function creditContribution(person) {
+  if (person.contribution) return person.contribution;
+  const role = person.creditRole || person.role || '';
+  if (/web development/i.test(role)) return 'Frontend implementation and web development.';
+  if (/product direction|engineering/i.test(role)) return 'Product direction, engineering, and delivery.';
+  return '';
+}
+
+function socialIcon(label) {
+  const key = label.toLowerCase();
+  const commonAttrs = 'class="credit-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"';
+
+  if (key.includes('instagram')) {
+    return `<svg ${commonAttrs}><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle cx="12" cy="12" r="3.4"></circle><circle cx="17" cy="7" r="1"></circle></svg>`;
+  }
+
+  if (key.includes('linkedin')) {
+    return `<svg ${commonAttrs}><path d="M6.5 10v8"></path><path d="M6.5 7v.01"></path><path d="M11 18v-8"></path><path d="M11 13.4c0-2.1 1.3-3.6 3.3-3.6 1.9 0 3.2 1.2 3.2 3.8V18"></path></svg>`;
+  }
+
+  if (key.includes('github')) {
+    return `<svg ${commonAttrs}><path d="M9 19c-4 1.2-4-2-5.6-2.4"></path><path d="M15 22v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.7-1.4 5.7-6.1 0-1.4-.5-2.5-1.3-3.4.1-.3.6-1.7-.1-3.4 0 0-1.1-.3-3.5 1.3a12.2 12.2 0 0 0-6.4 0C6.5 3.3 5.4 3.6 5.4 3.6c-.7 1.7-.2 3.1-.1 3.4A5 5 0 0 0 4 10.4c0 4.7 2.9 5.8 5.7 6.1-.4.4-.7 1-.7 2V22"></path></svg>`;
+  }
+
+  return `<svg ${commonAttrs}><path d="M10 6H6.8A2.8 2.8 0 0 0 4 8.8v8.4A2.8 2.8 0 0 0 6.8 20h8.4a2.8 2.8 0 0 0 2.8-2.8V14"></path><path d="M14 4h6v6"></path><path d="M11 13 20 4"></path></svg>`;
+}
+
+function renderCreditLinks(person) {
+  return (person.links || []).map((link) => `
+    <a href="${link.url}" target="_blank" rel="noopener noreferrer">
+      ${socialIcon(link.label)}
+      <span>${link.label}</span>
+      <span class="link-arrow" aria-hidden="true">-&gt;</span>
+    </a>
+  `).join('');
+}
+
 function renderProjectCredits(project) {
-  const credits = (project.collaborators || []).map((person) => `
-    <article class="project-credit">
-      <div class="credit-avatar" aria-hidden="true">${person.avatar}</div>
-      <div>
+  const collaborators = project.collaborators || [];
+  if (!collaborators.length) return '';
+
+  const credits = collaborators.map((person, index) => `
+    <article class="project-credit-row">
+      <div class="credit-index">${String(index + 1).padStart(2, '0')}</div>
+      <div class="credit-main">
         <h4>${person.name}</h4>
         <p>${person.creditRole || person.role}</p>
-        <div class="credit-links">${renderPersonLinks(person)}</div>
+        ${creditContribution(person) ? `<span>${creditContribution(person)}</span>` : ''}
+        <div class="credit-links">${renderCreditLinks(person)}</div>
       </div>
+      <div class="credit-monogram" aria-hidden="true">${person.avatar}</div>
     </article>
   `).join('');
 
   return `
     <aside class="project-credits" aria-label="${project.name} project credits">
-      <p>Project Credits</p>
+      <div class="credit-heading">
+        <p>Project Team</p>
+        <span>${String(collaborators.length).padStart(2, '0')}</span>
+      </div>
       <div class="project-credit-list">${credits}</div>
     </aside>
+  `;
+}
+
+function renderProjectCta(project, linkUrl) {
+  const isCaseStudy = Boolean(project.slug);
+  const attrs = isCaseStudy ? '' : 'target="_blank" rel="noopener noreferrer"';
+  return `
+    <a href="${linkUrl}" class="project-case-row" ${attrs}>
+      <span>${isCaseStudy ? 'Explore the full project' : 'Open live project'}</span>
+      <strong>${isCaseStudy ? 'View Case Study' : 'Explore'}</strong>
+      <i aria-hidden="true">-&gt;</i>
+    </a>
   `;
 }
 
@@ -288,14 +345,7 @@ function renderFeaturedProjects() {
           <p class="${isLarge ? 'project-description' : ''}">${project.description}</p>
           ${isLarge ? `<p class="project-services">${project.services.join(' / ')}</p>` : ''}
           ${renderProjectCredits(project)}
-          
-          ${!isLarge ? `
-          <div class="project-actions" style="margin-top:16px;">
-            <a href="${linkUrl}" class="text-link case-link" ${!project.slug ? 'target="_blank" rel="noopener"' : ''}>
-              ${project.slug ? 'View Case Study' : 'Explore'} <span class="link-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div>
-          ` : ''}
+          ${renderProjectCta(project, linkUrl)}
         </div>
         
         ${isLarge ? `
@@ -328,11 +378,7 @@ function renderArchiveProjects() {
         <h3>${project.name}</h3>
         <p>${project.description}</p>
         ${renderProjectCredits(project)}
-        <div class="project-actions" style="margin-top:16px;">
-          <a href="${linkUrl}" class="text-link case-link" ${!project.slug ? 'target="_blank" rel="noopener"' : ''}>
-            ${project.slug ? 'View Case Study' : 'Explore'} <span class="link-arrow" aria-hidden="true">↗</span>
-          </a>
-        </div>
+        ${renderProjectCta(project, linkUrl)}
       </div>
     </article>
   `}).join('');
@@ -357,7 +403,7 @@ function renderCaseStudy(slug) {
     <div class="cs-meta-item"><dt>Year</dt><dd>${project.year}</dd></div>
     <div class="cs-meta-item"><dt>Type</dt><dd>${project.category}</dd></div>
     <div class="cs-meta-item"><dt>Services</dt><dd>${project.services ? project.services.join('<br>') : 'Development'}</dd></div>
-    ${project.liveUrl ? `<div class="cs-meta-item"><dt>Live Product</dt><dd><a href="${project.liveUrl}" target="_blank" class="text-link">${project.liveUrl.replace('https://', '')} ↗</a></dd></div>` : ''}
+    ${project.liveUrl ? `<div class="cs-meta-item"><dt>Live Product</dt><dd><a href="${project.liveUrl}" target="_blank" class="text-link">${project.liveUrl.replace('https://', '')} -&gt;</a></dd></div>` : ''}
   `;
 
   const fillSection = (id, text) => {
@@ -372,33 +418,21 @@ function renderCaseStudy(slug) {
 
   fillSection('csProblem', project.problem || '');
   fillSection('csSystem', project.system || '');
-  fillSection('csProduct', project.product || ''); // Visuals go here in future
+  fillSection('csProduct', project.product || '');
   fillSection('csEngineering', project.engineering || '');
   fillSection('csResult', project.result || '');
 
-  const credits = project.collaborators.map((person) => {
-    const mainLink = person.links && person.links.length > 0 ? person.links[0].url : '#';
-    return `
-    <div class="cs-credit-person">
-      <h4>${person.name}</h4>
-      <p>${person.creditRole || person.role}</p>
-      <div class="cs-credit-links">
-        ${person.links.map(l => `<a href="${l.url}" target="_blank" class="text-link">${l.label} ↗</a>`).join('')}
-      </div>
-    </div>
-  `}).join('');
-  document.getElementById('csCredits').innerHTML = credits;
+  document.getElementById('csCredits').innerHTML = renderProjectCredits(project);
 
-  // Next Project
   const currentIndex = projects.findIndex(p => p.slug === slug);
   let nextProject = null;
-  for(let i = currentIndex + 1; i < projects.length; i++) {
-    if(projects[i].slug) {
+  for (let i = currentIndex + 1; i < projects.length; i++) {
+    if (projects[i].slug) {
       nextProject = projects[i];
       break;
     }
   }
-  if(!nextProject) nextProject = projects.find(p => p.slug); // wrap around
+  if (!nextProject) nextProject = projects.find(p => p.slug);
 
   if (nextProject) {
     document.getElementById('csNext').innerHTML = `
@@ -437,6 +471,7 @@ function handleRoute() {
     mountPage('page-home');
     renderFeaturedProjects();
     initContactForm();
+    initTeamVisual();
   } else if (path === '/work' || path === '/work/') {
     document.title = "Selected Work - Tariq & Co.Tech";
     mountPage('page-work');
@@ -456,6 +491,7 @@ function handleRoute() {
     mountPage('page-home');
     renderFeaturedProjects();
     initContactForm();
+    initTeamVisual();
   }
 
   restoreRouteScroll();
@@ -524,6 +560,32 @@ function initNavigation() {
     if (!event.target.closest('a')) return;
     navLinks.classList.remove('is-open');
     menuToggle?.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function initTeamVisual() {
+  const visual = document.querySelector('.team-orbit');
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!visual || !canHover || visual.dataset.teamBound) return;
+
+  visual.dataset.teamBound = 'true';
+  const labels = visual.querySelectorAll('span[data-depth]');
+
+  visual.addEventListener('pointermove', (event) => {
+    const rect = visual.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 10;
+
+    labels.forEach((label) => {
+      const depth = Number(label.dataset.depth || 0);
+      label.style.translate = `${x * depth}px ${y * depth}px`;
+    });
+  }, { passive: true });
+
+  visual.addEventListener('pointerleave', () => {
+    labels.forEach((label) => {
+      label.style.translate = '0 0';
+    });
   });
 }
 
@@ -872,7 +934,7 @@ function initContactForm() {
       status.innerHTML = `Draft ready. <a href="${mailtoUrl}">Open your email app</a>.`;
       form.reset();
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span class="button-label">Continue via Email</span><span class="button-icon" aria-hidden="true">-&gt;</span>';
+      submitBtn.innerHTML = '<span class="button-label">Send Project Brief</span><span class="button-icon" aria-hidden="true">-&gt;</span>';
     }, 400);
   });
 }
@@ -882,6 +944,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initRouter();
   initNavigation();
   initTheme();
+  initTeamVisual();
   if (typeof initSystemCanvas === 'function') initSystemCanvas();
   if (typeof initHeroSystem === 'function') initHeroSystem();
 });
