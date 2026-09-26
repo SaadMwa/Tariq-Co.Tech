@@ -27,8 +27,10 @@
     (function () {
       var savedTheme = localStorage.getItem('tc-theme');
       var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = savedTheme || (systemDark ? 'dark' : 'light');
+      var mode = savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system' ? savedTheme : 'system';
+      var theme = mode === 'system' ? (systemDark ? 'dark' : 'light') : mode;
       document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themeMode = mode;
       document.documentElement.style.colorScheme = theme;
     })();
   </script>
@@ -43,7 +45,7 @@
       .project-tile,
       .services-list article,
       .process-rail article,
-      .person-card,
+      .person-row,
       .people-block,
       .about-copy,
       .contact-copy,
@@ -77,15 +79,18 @@
       </div>
 
       <div class="nav-actions">
-        <a href="#contact" class="nav-cta">Start a Project</a>
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme" aria-pressed="false">
-          <span class="theme-icon theme-sun" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 4V2m0 20v-2m8-8h2M2 12h2m14.95-6.95 1.41-1.41M3.64 20.36l1.41-1.41m0-13.9L3.64 3.64m16.72 16.72-1.41-1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
-          </span>
-          <span class="theme-icon theme-moon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M21 14.2A7.7 7.7 0 0 1 9.8 3a8.9 8.9 0 1 0 11.2 11.2Z"/></svg>
-          </span>
-        </button>
+        <a href="#contact" class="nav-cta">Start a Project <span class="link-arrow" aria-hidden="true">-&gt;</span></a>
+        <div class="theme-switch" id="themeSwitch" role="group" aria-label="Color theme">
+          <button class="theme-option" type="button" data-theme-choice="system" aria-label="Use system theme" aria-pressed="false" title="System">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+          </button>
+          <button class="theme-option" type="button" data-theme-choice="light" aria-label="Use light theme" aria-pressed="false" title="Light">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4V2m0 20v-2m8-8h2M2 12h2m14.95-6.95 1.41-1.41M3.64 20.36l1.41-1.41m0-13.9L3.64 3.64m16.72 16.72-1.41-1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+          </button>
+          <button class="theme-option" type="button" data-theme-choice="dark" aria-label="Use dark theme" aria-pressed="false" title="Dark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 14.2A7.7 7.7 0 0 1 9.8 3a8.9 8.9 0 1 0 11.2 11.2Z"/></svg>
+          </button>
+        </div>
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
           <span></span>
           <span></span>
@@ -109,23 +114,50 @@
           </div>
         </div>
 
-        <aside class="hero-proof reveal-item" aria-label="Studio capabilities">
-          <div class="proof-top">
-            <img src="images/Company_Logo.png" alt="Tariq & Co.Tech logo" />
-            <span>Connected software systems</span>
+        <aside class="hero-system reveal-item" aria-label="Interactive software system visual">
+          <div class="system-orbit" aria-hidden="true">
+            <span class="system-chip chip-api">
+              <svg viewBox="0 0 24 24"><path d="M7 8 3 12l4 4M17 8l4 4-4 4M14 4l-4 16"/></svg>
+              API
+            </span>
+            <span class="system-chip chip-db">
+              <svg viewBox="0 0 24 24"><path d="M12 4c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3Z"/><path d="M4 7v5c0 1.7 3.6 3 8 3s8-1.3 8-3V7"/><path d="M4 12v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/></svg>
+              DATA
+            </span>
+            <span class="system-chip chip-ai">
+              <svg viewBox="0 0 24 24"><path d="M12 3l1.2 4.2L17 9l-3.8 1.8L12 15l-1.2-4.2L7 9l3.8-1.8L12 3Z"/><path d="M18 14l.7 2.3L21 17l-2.3.7L18 20l-.7-2.3L15 17l2.3-.7L18 14Z"/></svg>
+              AI
+            </span>
+            <span class="system-chip chip-auth">
+              <svg viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M12 15v2"/></svg>
+              AUTH
+            </span>
           </div>
-          <div class="proof-flow">
-            <span>Workflow</span>
-            <i></i>
-            <span>Product</span>
-            <i></i>
-            <span>Launch</span>
+          <div class="system-panel">
+            <div class="panel-bar">
+              <span></span><span></span><span></span>
+              <strong>workflow.map</strong>
+            </div>
+            <div class="panel-grid">
+              <div class="panel-node is-active">
+                <small>Trigger</small>
+                <strong>Lead received</strong>
+              </div>
+              <div class="panel-node">
+                <small>API</small>
+                <strong>Sync CRM</strong>
+              </div>
+              <div class="panel-node">
+                <small>Rule</small>
+                <strong>Assign task</strong>
+              </div>
+              <div class="panel-node">
+                <small>Output</small>
+                <strong>Client portal</strong>
+              </div>
+            </div>
+            <div class="signal-line" aria-hidden="true"><i></i><i></i><i></i></div>
           </div>
-          <dl>
-            <div><dt>01</dt><dd>Map the business process.</dd></div>
-            <div><dt>02</dt><dd>Design the system around real users.</dd></div>
-            <div><dt>03</dt><dd>Build, review, verify, and ship.</dd></div>
-          </dl>
         </aside>
       </div>
       <div class="scroll-cue" aria-hidden="true">Scroll</div>
@@ -235,30 +267,7 @@
           <p class="kicker">People Behind the Work</p>
           <h3>A small team structure with clear credits.</h3>
         </div>
-        <div class="people-grid">
-          <article class="person-card">
-            <div class="avatar">S</div>
-            <div>
-              <h3>Saad Tariq</h3>
-              <p>Founder / Software Engineer</p>
-              <div class="person-links">
-                <a href="https://github.com/SaadMwa" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://www.linkedin.com/in/saad-tariq-ab7827336/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-              </div>
-            </div>
-          </article>
-          <article class="person-card">
-            <div class="avatar">M</div>
-            <div>
-              <h3>Mahak</h3>
-              <p>Web Development Collaborator</p>
-              <div class="person-links">
-                <a href="https://www.instagram.com/mahak_codes22/" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://www.linkedin.com/in/mahak-webdev/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-              </div>
-            </div>
-          </article>
-        </div>
+        <div class="people-list" id="peopleRows"></div>
       </div>
     </section>
 
@@ -266,7 +275,7 @@
       <div class="container contact-grid">
         <div class="contact-copy">
           <p class="kicker">Start the Conversation</p>
-          <h2 class="section-title">Have a workflow that software could simplify?</h2>
+          <h2 class="section-title contact-title">Have something<br />worth building?</h2>
           <p>Tell us what happens today. We will help decide whether a custom system, web product, or automation layer is the right move.</p>
           <div class="direct-links">
             <a href="mailto:saadtariq.dev@gmail.com">saadtariq.dev@gmail.com</a>
