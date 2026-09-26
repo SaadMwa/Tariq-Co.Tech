@@ -159,6 +159,9 @@ const projects = [
 ];
 
 function externalLink(label, url, className = 'text-link') {
+  if (className.includes('button')) {
+    return `<a class="${className}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label} opens in a new tab"><span class="button-label">${label}</span> <span class="button-icon" aria-hidden="true">-&gt;</span></a>`;
+  }
   return `<a class="${className}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label} opens in a new tab">${label} <span class="link-arrow" aria-hidden="true">-&gt;</span></a>`;
 }
 
@@ -261,7 +264,7 @@ function renderFeaturedProjects() {
       <div class="project-footer">
         ${renderProjectCredits(project)}
         <div class="project-actions">
-          ${project.caseStudyUrl ? `<a class="button button-primary" href="${project.caseStudyUrl}">View Case Study <span class="link-arrow" aria-hidden="true">-&gt;</span></a>` : ''}
+          ${project.caseStudyUrl ? `<a class="text-link case-link" href="${project.caseStudyUrl}">View Case Study <span class="link-arrow" aria-hidden="true">-&gt;</span></a>` : ''}
           ${project.liveUrl ? externalLink('Live Project', project.liveUrl, 'button button-secondary') : '<span class="no-link-note">Live link withheld until verified.</span>'}
         </div>
       </div>
@@ -523,12 +526,15 @@ function initCursor() {
   let y = window.innerHeight / 2;
   let tx = x;
   let ty = y;
+  let scale = 0;
+  let targetScale = 0;
   let activeMedia = null;
 
   function render() {
     x += (tx - x) * 0.18;
     y += (ty - y) * 0.18;
-    cursor.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    scale += (targetScale - scale) * 0.2;
+    cursor.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${scale})`;
     requestAnimationFrame(render);
   }
 
@@ -546,17 +552,20 @@ function initCursor() {
       x = tx;
       y = ty;
       cursor.dataset.label = media.dataset.cursorLabel || 'EXPLORE';
+      targetScale = 1;
       cursor.classList.add('is-visible', 'is-project');
     });
 
     media.addEventListener('pointerleave', () => {
       activeMedia = null;
+      targetScale = 0;
       cursor.classList.remove('is-visible', 'is-project');
     });
   });
 
   document.addEventListener('pointerleave', () => {
     activeMedia = null;
+    targetScale = 0;
     cursor.classList.remove('is-visible', 'is-project');
   });
 
@@ -642,7 +651,7 @@ function initProjectMediaInteractions() {
 }
 
 function fallbackReveal() {
-  const targets = document.querySelectorAll('[data-animate], .section-heading, .project-feature, .project-tile, .services-list article, .process-rail article, .person-row, .people-block, .about-copy, .contact-copy, .contact-form, .editorial-grid > *');
+  const targets = document.querySelectorAll('[data-animate], .project-feature, .project-tile, .services-list article, .process-rail article, .person-row, .people-block, .about-copy, .contact-copy, .contact-form, .editorial-grid > *');
   if (!('IntersectionObserver' in window)) {
     targets.forEach((target) => target.classList.add('is-visible'));
     return;
@@ -690,7 +699,34 @@ function initMotion() {
     ease: 'power3.out'
   });
 
-  gsap.utils.toArray('.section-heading, .editorial-grid > *, .services-list article, .process-rail article, .person-row, .people-block, .about-copy, .contact-copy, .contact-form').forEach((item) => {
+  gsap.utils.toArray('.section-heading').forEach((heading) => {
+    const kicker = heading.querySelector('.kicker');
+    const title = heading.querySelector('.section-title');
+    const copy = heading.querySelector(':scope > p:not(.kicker)');
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: heading,
+        start: 'top 84%',
+        once: true
+      }
+    });
+
+    if (kicker) timeline.from(kicker, { y: 14, opacity: 0, duration: 0.45, ease: 'power3.out' }, 0);
+    if (title) {
+      timeline.fromTo(title, {
+        clipPath: 'inset(100% 0 0 0)',
+        y: 18
+      }, {
+        clipPath: 'inset(0% 0 0 0)',
+        y: 0,
+        duration: 0.7,
+        ease: 'power3.out'
+      }, 0.08);
+    }
+    if (copy) timeline.from(copy, { y: 20, opacity: 0, duration: 0.55, ease: 'power3.out' }, 0.18);
+  });
+
+  gsap.utils.toArray('.editorial-grid > *, .services-list article, .process-rail article, .person-row, .people-block, .about-copy, .contact-copy, .contact-form').forEach((item) => {
     gsap.to(item, {
       opacity: 1,
       y: 0,
@@ -735,20 +771,10 @@ function initMotion() {
     ease: 'power3.out'
   });
 
-  gsap.utils.toArray('.main-screen').forEach((image) => {
-    gsap.fromTo(image, { yPercent: -4 }, {
-      yPercent: 4,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: image,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
-  });
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!canHover) return;
 
-  document.querySelectorAll('.magnetic').forEach((button) => {
+  document.querySelectorAll('.magnetic, .nav-cta').forEach((button) => {
     button.addEventListener('pointermove', (event) => {
       const rect = button.getBoundingClientRect();
       const x = event.clientX - rect.left - rect.width / 2;
@@ -804,7 +830,7 @@ function initContactForm() {
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Preparing...';
+    submitBtn.innerHTML = '<span class="button-label">Preparing...</span><span class="button-icon" aria-hidden="true">-&gt;</span>';
     status.className = 'form-status';
     status.textContent = 'Preparing your email draft.';
 
@@ -824,7 +850,7 @@ function initContactForm() {
       status.innerHTML = `Draft ready. <a href="${mailtoUrl}">Open your email app</a>.`;
       form.reset();
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Prepare Project Email';
+      submitBtn.innerHTML = '<span class="button-label">Continue via Email</span><span class="button-icon" aria-hidden="true">-&gt;</span>';
     }, 400);
   });
 }
