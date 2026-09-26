@@ -34,10 +34,10 @@
       document.documentElement.style.colorScheme = theme;
     })();
   </script>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/style.css" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script defer src="script.js"></script>
+  <script defer src="/script.js"></script>
   <noscript>
     <style>
       .section-heading,
@@ -62,8 +62,8 @@
 
   <header class="site-header" id="siteHeader">
     <nav class="nav-shell" aria-label="Primary navigation">
-      <a class="brand" href="#top" aria-label="Tariq and Co.Tech home">
-        <img src="images/Company_Logo.png" alt="" class="brand-logo" />
+      <a class="brand" href="/#top" aria-label="Tariq and Co.Tech home">
+        <img src="/images/Company_Logo.png" alt="" class="brand-logo" />
         <span>
           <strong>Tariq &amp; Co.Tech</strong>
           <small>Software studio</small>
@@ -72,14 +72,14 @@
 
       <div class="nav-links" id="navLinks">
         <a href="/work">Work</a>
-        <a href="#services">Services</a>
-        <a href="#process">Process</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+        <a href="/#services">Services</a>
+        <a href="/#process">Process</a>
+        <a href="/#about">About</a>
+        <a href="/#contact">Contact</a>
       </div>
 
       <div class="nav-actions">
-        <a href="#contact" class="nav-cta">Start a Project <span class="link-arrow" aria-hidden="true">-&gt;</span></a>
+        <a href="/#contact" class="nav-cta">Start a Project <span class="link-arrow" aria-hidden="true">-&gt;</span></a>
         <div class="theme-switch" id="themeSwitch" role="group" aria-label="Color theme">
           <button class="theme-option" type="button" data-theme-choice="system" aria-label="Use system theme" aria-pressed="false" title="System">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
@@ -99,7 +99,8 @@
     </nav>
   </header>
 
-  <main id="page-home" class="page-view is-active">
+  <template id="template-page-home">
+  <main id="page-home" class="page-view">
     <section class="hero" id="top">
       <canvas class="system-canvas" id="systemCanvas" aria-hidden="true"></canvas>
       <div class="hero-noise" aria-hidden="true"></div>
@@ -109,7 +110,7 @@
           <h1 class="hero-title split-line">Software that turns complex business workflows into working systems.</h1>
           <p class="hero-text reveal-item">We design and build custom platforms, web products, dashboards, automation, and operational tools for teams that have outgrown scattered manual work.</p>
           <div class="hero-actions reveal-item">
-            <a href="#contact" class="button button-primary magnetic"><span class="button-label">Start a Project</span><span class="button-icon" aria-hidden="true">-&gt;</span></a>
+            <a href="/#contact" class="button button-primary magnetic"><span class="button-label">Start a Project</span><span class="button-icon" aria-hidden="true">-&gt;</span></a>
             <a href="/work" class="button button-secondary magnetic"><span class="button-label">View Our Work</span><span class="link-arrow" aria-hidden="true">-&gt;</span></a>
           </div>
         </div>
@@ -320,8 +321,10 @@
     </section>
   
   </main>
+  </template>
 
-  <main id="page-work" class="page-view" style="display:none;">
+  <template id="template-page-work">
+  <main id="page-work" class="page-view">
     <section class="archive-section">
       <div class="container">
         <div class="archive-header section-heading">
@@ -333,8 +336,10 @@
       </div>
     </section>
   </main>
+  </template>
 
-  <main id="page-case-study" class="page-view" style="display:none;">
+  <template id="template-page-case-study">
+  <main id="page-case-study" class="page-view">
     <article class="case-study-content">
       <div class="container">
         <header class="cs-header">
@@ -389,11 +394,13 @@
       
       <section class="cs-next" id="csNext"></section>
     </article>
+  </main>
+  </template>
   
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <img src="images/Company_Logo.png" alt="" />
+        <img src="/images/Company_Logo.png" alt="" />
         <div>
           <strong>Tariq &amp; Co.Tech</strong>
           <p>Software that solves real business problems.</p>
@@ -401,8 +408,8 @@
       </div>
       <div class="footer-links">
         <a href="/work">Work</a>
-        <a href="#services">Services</a>
-        <a href="#contact">Contact</a>
+        <a href="/#services">Services</a>
+        <a href="/#contact">Contact</a>
       </div>
       <p>&copy; 2026 Tariq &amp; Co.Tech. All rights reserved.</p>
     </div>

@@ -152,11 +152,48 @@ const projects = [
   }
 ];
 
+const pageTemplates = {};
+let activePage = null;
+
 function externalLink(label, url, className = 'text-link') {
   if (className.includes('button')) {
     return `<a class="${className}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label} opens in a new tab"><span class="button-label">${label}</span> <span class="button-icon" aria-hidden="true">-&gt;</span></a>`;
   }
   return `<a class="${className}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label} opens in a new tab">${label} <span class="link-arrow" aria-hidden="true">-&gt;</span></a>`;
+}
+
+function assetPath(filePath) {
+  if (!filePath || filePath.startsWith('/') || filePath.startsWith('http')) return filePath;
+  return '/' + filePath;
+}
+
+function capturePageTemplates() {
+  document.querySelectorAll('template[id^="template-page-"]').forEach((template) => {
+    const page = template.content.firstElementChild;
+    if (page?.classList.contains('page-view')) {
+      pageTemplates[page.id] = page;
+    }
+  });
+
+  document.querySelectorAll('body > .page-view').forEach((page) => {
+    pageTemplates[page.id] = page;
+    page.remove();
+  });
+}
+
+function mountPage(id) {
+  if (activePage?.id === id) return activePage;
+
+  activePage?.remove();
+
+  const source = pageTemplates[id];
+  if (!source) return null;
+
+  const page = source.cloneNode(true);
+  page.classList.add('is-active');
+  document.querySelector('.footer')?.before(page);
+  activePage = page;
+  return page;
 }
 
 function slugify(value) {
@@ -168,7 +205,7 @@ function renderPersonLinks(person, className = 'text-link') {
 }
 
 function renderProjectCredits(project) {
-  const credits = project.collaborators.map((person) => `
+  const credits = (project.collaborators || []).map((person) => `
     <article class="project-credit">
       <div class="credit-avatar" aria-hidden="true">${person.avatar}</div>
       <div>
@@ -188,6 +225,8 @@ function renderProjectCredits(project) {
 }
 
 function renderMedia(project) {
+  const image = assetPath(project.image);
+
   if (project.image) {
     return `
       <div class="media-canvas">
@@ -197,11 +236,11 @@ function renderMedia(project) {
             <span></span><span></span><span></span>
             <strong>${project.category}</strong>
           </div>
-          <img class="main-screen" src="${project.image}" alt="${project.name} project screenshot" loading="lazy" decoding="async" />
+          <img class="main-screen" src="${image}" alt="${project.name} project screenshot" loading="lazy" decoding="async" />
         </div>
         <div class="detail-screen" aria-hidden="true">
           <span>${project.status || 'Live'}</span>
-          <img src="${project.image}" alt="" loading="lazy" decoding="async" />
+          <img src="${image}" alt="" loading="lazy" decoding="async" />
         </div>
       </div>
     `;
@@ -309,7 +348,7 @@ function renderCaseStudy(slug) {
   
   const hero = document.getElementById('csHero');
   if (project.image) {
-    hero.innerHTML = `<img src="${project.image}" alt="${project.name} preview">`;
+    hero.innerHTML = `<img src="${assetPath(project.image)}" alt="${project.name} preview">`;
   } else {
     hero.innerHTML = `<div style="padding:120px; text-align:center; background:var(--surface);"><h2 style="font-family:'Manrope',sans-serif;">${project.name}</h2><p>No preview available</p></div>`;
   }
@@ -317,7 +356,7 @@ function renderCaseStudy(slug) {
   document.getElementById('csMetadata').innerHTML = `
     <div class="cs-meta-item"><dt>Year</dt><dd>${project.year}</dd></div>
     <div class="cs-meta-item"><dt>Type</dt><dd>${project.category}</dd></div>
-    <div class="cs-meta-item"><dt>Services</dt><dd>${project.services.join('<br>')}</dd></div>
+    <div class="cs-meta-item"><dt>Services</dt><dd>${project.services ? project.services.join('<br>') : 'Development'}</dd></div>
     ${project.liveUrl ? `<div class="cs-meta-item"><dt>Live Product</dt><dd><a href="${project.liveUrl}" target="_blank" class="text-link">${project.liveUrl.replace('https://', '')} ↗</a></dd></div>` : ''}
   `;
 
@@ -331,11 +370,11 @@ function renderCaseStudy(slug) {
     }
   };
 
-  fillSection('csProblem', project.problem);
-  fillSection('csSystem', project.system);
-  fillSection('csProduct', ''); // Visuals go here in future
-  fillSection('csEngineering', project.engineering);
-  fillSection('csResult', project.result);
+  fillSection('csProblem', project.problem || '');
+  fillSection('csSystem', project.system || '');
+  fillSection('csProduct', project.product || ''); // Visuals go here in future
+  fillSection('csEngineering', project.engineering || '');
+  fillSection('csResult', project.result || '');
 
   const credits = project.collaborators.map((person) => {
     const mainLink = person.links && person.links.length > 0 ? person.links[0].url : '#';
@@ -372,41 +411,54 @@ function renderCaseStudy(slug) {
   return true;
 }
 
+function restoreRouteScroll() {
+  if (window.location.hash) {
+    const targetId = decodeURIComponent(window.location.hash.slice(1));
+    const target = document.getElementById(targetId);
+
+    if (target) {
+      requestAnimationFrame(() => target.scrollIntoView({ behavior: 'auto', block: 'start' }));
+      return;
+    }
+  }
+
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
 function handleRoute() {
   const path = window.location.pathname;
-  
-  document.querySelectorAll('.page-view').forEach(view => view.classList.remove('is-active'));
-  
+
   // Custom cursor cleanup
   const cursor = document.getElementById('cursorDot');
   if (cursor) cursor.classList.remove('is-active', 'is-project');
 
-  window.scrollTo({ top: 0, behavior: 'instant' });
-
   if (path === '/' || path.endsWith('/index.html') || (!path.includes('/work') && !path.includes('/work/'))) {
     document.title = "Tariq & Co.Tech - Software Studio";
-    document.getElementById('page-home').classList.add('is-active');
+    mountPage('page-home');
+    renderFeaturedProjects();
+    initContactForm();
   } else if (path === '/work' || path === '/work/') {
     document.title = "Selected Work - Tariq & Co.Tech";
+    mountPage('page-work');
     renderArchiveProjects();
-    document.getElementById('page-work').classList.add('is-active');
-    // We must re-bind cursor events for newly injected DOM
-    if (typeof initCursor === 'function') {
-        // Just let global event listeners handle it, or re-run querySelectorAll logic
-        bindMediaClicks();
-    }
   } else if (path.startsWith('/work/')) {
     const slug = path.split('/work/')[1].replace('/', '');
+    mountPage('page-case-study');
     if (renderCaseStudy(slug)) {
-      document.getElementById('page-case-study').classList.add('is-active');
+      activePage?.classList.add('is-active');
     } else {
-      document.getElementById('page-work').classList.add('is-active');
+      mountPage('page-work');
+      renderArchiveProjects();
     }
   } else {
     // Fallback for file:// protocols or unknown routes
     document.title = "Tariq & Co.Tech - Software Studio";
-    document.getElementById('page-home').classList.add('is-active');
+    mountPage('page-home');
+    renderFeaturedProjects();
+    initContactForm();
   }
+
+  restoreRouteScroll();
 }
 
 function bindMediaClicks() {
@@ -449,6 +501,30 @@ function initRouter() {
 
   handleRoute();
   bindMediaClicks();
+}
+
+function initNavigation() {
+  const header = document.getElementById('siteHeader');
+  const navLinks = document.getElementById('navLinks');
+  const menuToggle = document.getElementById('menuToggle');
+
+  const updateHeader = () => {
+    header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  };
+
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
+
+  menuToggle?.addEventListener('click', () => {
+    const isOpen = navLinks?.classList.toggle('is-open');
+    menuToggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
+  });
+
+  navLinks?.addEventListener('click', (event) => {
+    if (!event.target.closest('a')) return;
+    navLinks.classList.remove('is-open');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+  });
 }
 
 function initProjectMediaInteractions() {
@@ -529,6 +605,61 @@ function initProjectMediaInteractions() {
       apply(depthBg, { x: 0, y: 0 });
     });
   });
+}
+
+function initTheme() {
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll('[data-theme-choice]');
+  const systemQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const validModes = ['system', 'light', 'dark'];
+
+  const getSavedMode = () => {
+    try {
+      const saved = localStorage.getItem('tc-theme');
+      return validModes.includes(saved) ? saved : 'system';
+    } catch (error) {
+      return 'system';
+    }
+  };
+
+  const resolveTheme = (mode) => mode === 'system'
+    ? (systemQuery.matches ? 'dark' : 'light')
+    : mode;
+
+  const setTheme = (mode, persist = true) => {
+    const safeMode = validModes.includes(mode) ? mode : 'system';
+    const theme = resolveTheme(safeMode);
+
+    root.dataset.theme = theme;
+    root.dataset.themeMode = safeMode;
+    root.style.colorScheme = theme;
+
+    buttons.forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.themeChoice === safeMode));
+    });
+
+    if (persist) {
+      try {
+        localStorage.setItem('tc-theme', safeMode);
+      } catch (error) {
+        // Storage can be blocked in some browser privacy modes.
+      }
+    }
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      root.classList.add('is-theme-changing');
+      setTheme(button.dataset.themeChoice);
+      window.setTimeout(() => root.classList.remove('is-theme-changing'), 320);
+    });
+  });
+
+  systemQuery.addEventListener?.('change', () => {
+    if (root.dataset.themeMode === 'system') setTheme('system', false);
+  });
+
+  setTheme(getSavedMode(), false);
 }
 
 function fallbackReveal() {
@@ -747,14 +878,10 @@ function initContactForm() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderFeaturedProjects();
+  capturePageTemplates();
   initRouter();
   initNavigation();
   initTheme();
-  initSystemCanvas();
-  initHeroSystem();
-  initCursor();
-  initProjectMediaInteractions();
-  initMotion();
-  initContactForm();
+  if (typeof initSystemCanvas === 'function') initSystemCanvas();
+  if (typeof initHeroSystem === 'function') initHeroSystem();
 });

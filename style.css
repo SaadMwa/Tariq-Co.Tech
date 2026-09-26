@@ -7,6 +7,7 @@
 }
 
 :root {
+  --nav-height: 78px;
   --background: #f5f7fb;
   --background-secondary: #eaf0f8;
   --surface: #ffffff;
@@ -52,6 +53,12 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 24px);
+}
+
+section,
+[id] {
+  scroll-margin-top: calc(var(--nav-height) + 24px);
 }
 
 body {
@@ -119,16 +126,18 @@ button, input, textarea {
 .site-header {
   position: fixed;
   inset: 0 0 auto;
-  z-index: 90;
+  z-index: 900;
   border-bottom: 1px solid transparent;
+  background: transparent;
   transition: background-color 220ms ease, border-color 220ms ease, backdrop-filter 220ms ease;
 }
 
 .site-header.is-scrolled {
   border-bottom-color: var(--line);
-  background: color-mix(in srgb, var(--background) 82%, transparent);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 32px color-mix(in srgb, #000 9%, transparent);
 }
 
 .nav-shell {
@@ -917,7 +926,6 @@ section {
 
 .project-moment-3 .project-media {
   grid-column: 1 / -1;
-  min-height: clamp(420px, 52vw, 690px);
 }
 
 .project-moment-3 .project-detail {
@@ -954,15 +962,11 @@ section {
 
 .project-media {
   position: relative;
-  min-height: clamp(390px, 48vw, 640px);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 24px;
-  background:
-    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--brand) 15%, transparent), transparent 20rem),
-    radial-gradient(circle at 85% 82%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 18rem),
-    color-mix(in srgb, var(--surface-elevated) 82%, var(--background));
-  padding: clamp(14px, 2.4vw, 32px);
+  background: color-mix(in srgb, var(--surface-elevated) 88%, var(--background));
+  padding: clamp(16px, 3vw, 36px);
   box-shadow: var(--shadow);
   transition: background-color 220ms ease, border-color 220ms ease;
 }
@@ -975,42 +979,22 @@ section {
 
 .media-canvas {
   position: relative;
-  min-height: 100%;
-  display: grid;
-  place-items: center;
-  perspective: 1200px;
-  transform-style: preserve-3d;
-  scale: 1;
-  transition: scale 360ms ease;
-}
-
-.project-media:hover .media-canvas,
-.tile-image:hover .media-canvas {
-  scale: 1.018;
+  display: block;
 }
 
 .media-depth-bg {
-  position: absolute;
-  inset: 9%;
-  border-radius: 28px;
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--brand) 24%, transparent), transparent 52%),
-    repeating-linear-gradient(90deg, color-mix(in srgb, var(--foreground) 7%, transparent) 0 1px, transparent 1px 42px);
-  opacity: 0.72;
-  transform: translateZ(-40px);
-  pointer-events: none;
+  display: none;
 }
 
 .browser-shell {
   position: relative;
   z-index: 1;
-  width: min(100%, 760px);
+  width: 100%;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--surface);
   box-shadow: 0 18px 44px color-mix(in srgb, #000 20%, transparent);
-  transform: rotateX(0deg) rotateY(-1.4deg);
   transition: box-shadow 420ms ease, border-color 260ms ease;
 }
 
@@ -1034,16 +1018,14 @@ section {
 
 .browser-top strong {
   margin-left: 6px;
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   font-weight: 800;
 }
 
 .main-screen {
   width: 100%;
   height: auto;
-  max-height: 430px;
   object-fit: contain;
-  transform: scale(1.015);
   transition: transform 420ms ease;
   border-radius: 0;
   background: var(--surface);
@@ -1051,18 +1033,7 @@ section {
 }
 
 .detail-screen {
-  position: absolute;
-  z-index: 2;
-  right: clamp(12px, 4vw, 42px);
-  bottom: clamp(12px, 3vw, 34px);
-  width: min(34%, 240px);
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface);
-  box-shadow: 0 18px 48px color-mix(in srgb, #000 22%, transparent);
-  transform: translateY(10px) rotate(1.4deg);
-  transition: transform 420ms ease;
+  display: none;
 }
 
 .detail-screen span {
@@ -1435,16 +1406,15 @@ section {
 
 .tile-image {
   position: relative;
-  aspect-ratio: 16 / 10.5;
   overflow: hidden;
   border-bottom: 1px solid var(--line);
   background: color-mix(in srgb, var(--surface-elevated) 82%, var(--background));
-  padding: 12px;
+  padding: 14px;
   transition: background-color 220ms ease;
 }
 
 .tile-image .media-canvas {
-  min-height: 100%;
+  min-height: 0;
 }
 
 .tile-image .browser-shell {
@@ -1458,7 +1428,7 @@ section {
 }
 
 .tile-image .main-screen {
-  max-height: 190px;
+  max-height: none;
 }
 
 .tile-image .detail-screen {
@@ -1467,7 +1437,7 @@ section {
 
 .tile-image img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: contain;
   transition: transform 420ms ease;
   border-radius: 12px;
@@ -2025,7 +1995,9 @@ html.is-theme-changing *::after {
     gap: 0;
     border: 1px solid var(--line);
     border-radius: 22px;
-    background: rgba(7, 11, 20, 0.96);
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     box-shadow: var(--shadow);
     padding: 10px;
   }
@@ -2048,10 +2020,6 @@ html.is-theme-changing *::after {
 
   .hero-title {
     font-size: clamp(2.55rem, 11vw, 4rem);
-  }
-
-  .project-media {
-    min-height: 300px;
   }
 
   .about-layout,
@@ -2109,7 +2077,6 @@ html.is-theme-changing *::after {
   }
 
   .project-media {
-    min-height: 300px;
     border-radius: 18px;
   }
 
@@ -2191,9 +2158,6 @@ html.is-theme-changing *::after {
   display: block;
 }
 
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* ARCHIVE PAGE */
 .archive-section {
   padding: 140px 0 80px;
@@ -2216,8 +2180,8 @@ html.is-theme-changing *::after {
 
 /* CASE STUDY PAGE */
 .case-study-content {
-  padding-top: 140px;
-  padding-bottom: 80px;
+  padding-top: calc(var(--nav-height) + 56px);
+  padding-bottom: 72px;
 }
 .back-link {
   display: inline-flex;
@@ -2248,23 +2212,31 @@ html.is-theme-changing *::after {
   max-width: 800px;
 }
 .cs-hero {
-  margin: 60px 0;
+  width: min(100% - 48px, 1220px);
+  margin: clamp(36px, 6vw, 60px) auto;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: clamp(10px, 1.8vw, 18px);
   background: var(--surface-elevated);
+  box-shadow: var(--shadow);
 }
 .cs-hero img {
   width: 100%;
   height: auto;
-  max-height: 80vh;
-  object-fit: contain;
   display: block;
+  object-fit: contain;
+  object-position: top center;
+  border-radius: 12px;
+  background: var(--surface);
 }
 .cs-metadata {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
-  padding-bottom: 60px;
+  padding-bottom: clamp(32px, 5vw, 48px);
   border-bottom: 1px solid var(--line);
-  margin-bottom: 80px;
+  margin-bottom: clamp(40px, 6vw, 64px);
 }
 @media (min-width: 768px) {
   .cs-metadata {
@@ -2283,20 +2255,25 @@ html.is-theme-changing *::after {
   font-weight: 600;
   color: var(--ink);
 }
+.cs-body {
+  display: grid;
+  gap: clamp(48px, 6vw, 88px);
+}
+
 .cs-section {
-  margin-bottom: 80px;
-  max-width: 800px;
+  margin-bottom: 0;
+  max-width: min(72ch, 900px);
 }
 .cs-number {
   font-size: 0.85rem;
   color: var(--cyan);
   font-weight: 800;
-  margin-bottom: 12px;
+  margin-bottom: 8px; /* Tighter */
 }
 .cs-section h2 {
   font-family: "Manrope", sans-serif;
-  font-size: 2rem;
-  margin-bottom: 24px;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  margin-bottom: 20px; /* Tighter */
   text-transform: uppercase;
 }
 .cs-section p {
@@ -2317,7 +2294,7 @@ html.is-theme-changing *::after {
 .cs-product-grid {
   display: grid;
   gap: 24px;
-  margin-top: 40px;
+  margin-top: 32px;
 }
 .cs-product-grid img {
   width: 100%;
@@ -2344,8 +2321,8 @@ html.is-theme-changing *::after {
   gap: 16px;
 }
 .cs-next {
-  margin-top: 120px;
-  padding: 80px 0;
+  margin-top: clamp(64px, 8vw, 112px);
+  padding: clamp(48px, 7vw, 72px) 0;
   text-align: center;
   border-top: 1px solid var(--line);
   background: var(--surface);
